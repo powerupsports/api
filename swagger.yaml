@@ -1,0 +1,1119 @@
+openapi: 3.0.0
+servers:
+  - url: https://api.powerupsports.com/v1/
+security:
+  - apiKey: []
+info:
+  description: >
+    This API allows authenticated access to data for PowerUp Sports installations
+  version: "1.0.0"
+  title: PowerUp Sports Public API
+  contact:
+    email: info@powerupsports.com
+paths:
+  /seasons:
+    get:
+      summary: Get seasons for a club
+      description: >
+        Returns a set of seasons for a club. Seasons that are currently active or have ended in the last month will be returned
+      operationId: seasons_by_club
+      responses:
+        '200':
+          description: Requested season(s) found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeasonItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /seasons/{id}:
+    get:
+      summary: Get a single season by id
+      description: >
+        Returns a season
+      operationId: seasons_by_id
+      parameters:
+        - name: id
+          in: path
+          description: Season Identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested season found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeasonItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /categories/{id}:
+    get:
+      summary: Get a single category
+      description: >
+        Returns data for a single category
+      operationId: categories_by_id
+      parameters:
+        - name: id
+          in: path
+          description: Category Identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested categories found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /categories/season/{season_id}:
+    get:
+      summary: Get categories for a season
+      description: >
+        Returns categories for a requested season
+      operationId: categories_by_season
+      parameters:
+        - name: season_id
+          in: path
+          description: Season Identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested categories found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /divisions/{id}:
+    get:
+      summary: Get division identifier and name only
+      description: >
+        Returns division name
+      operationId: divisions_by_id
+      parameters:
+        - name: id
+          in: path
+          description: Division identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested division found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DivisionItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /divisions/season/{season_id}:
+    get:
+      summary: Get division identifier and name only for a requested season
+      description: >
+        Returns divisions for a season
+      operationId: divisions_by_season
+      parameters:
+        - name: season_id
+          in: path
+          description: Season identifier, if 0 the division id must be set
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Division(s) in requested season found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DivisionItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /divisions/category/{category_id}:
+    get:
+      summary: Get division and supplementary information for a category
+      description: >
+        Returns divisions linked to a category including season and category information
+      operationId: divisions_by_category
+      parameters:
+        - name: category_id
+          in: path
+          description: Category identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Divisions within requested category found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DivisionItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /gamesets/{id}:
+    get:
+      summary: Get a single gameset
+      description: >
+        Returns id, name and age for a requested gameset
+      operationId: gamesets_by_id
+      parameters:
+        - name: id
+          in: path
+          description: Gameset identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested gameset found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GamesetItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /gamesets/category/{category_id}:
+    get:
+      summary: Get gamesets within a requested category
+      description: >
+        Returns gameset ids, names and ages for a requested category
+      operationId: gamesets_by_category
+      parameters:
+        - name: category_id
+          in: path
+          description: Category identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested gamesets found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GamesetItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /teams/{id}:
+    get:
+      summary: Get a single team
+      description: >
+        Returns team information including id, name, colour and code
+      operationId: teams_by_id
+      parameters:
+        - name: id
+          in: path
+          description: Team identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested team found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /teams/division/{division_id}:
+    get:
+      summary: Get teams within a requested division
+      description: >
+        Returns teams for a division including identifier, name, colour and code
+      operationId: teams_by_division
+      parameters:
+        - name: division_id
+          in: path
+          description: Division identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested teams found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /teams/gameset/{gameset_id}:
+    get:
+      summary: Get teams within a requested gameset
+      description: >
+        Returns teams for a gameset including identifier, name, colour and code
+      operationId: teams_by_gameset
+      parameters:
+        - name: gameset_id
+          in: path
+          description: Gameset identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Requested teams found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /schedules/season/{season_id}/category/{category_id}/division/{division_id}:
+    get:
+      summary: Get a schedule of events for a division
+      operationId: schedule_by_division
+      description: >
+        Returns a schedule of events for all teams within a division ordered by date
+      parameters:
+        - name: season_id
+          in: path
+          required: true
+          description: Season identifier
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: category_id
+          in: path
+          required: true
+          description: Category identifier, must be a category within the requested season
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: division_id
+          in: path
+          required: true
+          description: Division identifier, must be a division within the requested category
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Schedule of events for a requested division found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /schedules/season/{season_id}/category/{category_id}/division/{division_id}/team/{team_id}:
+    get:
+      summary: Get a schedule of events for a team within a division
+      operationId: schedule_by_team
+      description: >
+        Returns a schedule of events for a single team within a division ordered by date
+      parameters:
+        - name: season_id
+          required: true
+          in: path
+          description: Season identifier
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: category_id
+          required: true
+          in: path
+          description: Category identifier, must be a category within the requested season
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: division_id
+          required: true
+          in: path
+          description: Division identifier, must be a division within the requested category
+          schema:
+            type: integer
+            format: int32
+        - name: team_id
+          required: true
+          in: path
+          description: Team identifier, must be within the requested division
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+      responses:
+        '200':
+          description: Schedule of events for a requested team found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /standings/season/{season_id}/gameset/{gameset_id}:
+    get:
+      summary: Get the standings for a requested gameset
+      operationId: standings_by_gameset
+      description: >
+        Returns a list of teams within a requested gameset for standings
+      parameters:
+        - name: season_id
+          in: path
+          required: true
+          description: Season identifier
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: gameset_id
+          in: path
+          required: true
+          description: Gameset identifier
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Standings for requested gameset was found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StandingsItem'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /game-results/category/{category_id}/gameset/{gameset_id}:
+    get:
+      summary: Get a list of game results for a gameset
+      operationId: game_results_by_gameset
+      description: >
+        Returns a list of game results for all teams in a gameset including location and date information
+      parameters:
+        - name: category_id
+          in: path
+          required: true
+          description: category identifier
+          schema:
+            type: integer
+            format: int32
+        - name: gameset_id
+          in: path
+          required: true
+          description: gameset identifier
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Game results for the selected gameset found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameResult'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /game-results/category/{category_id}/gameset/{gameset_id}/team/{team_id}:
+    get:
+      summary: Get a list of game results for a single team
+      operationId: game_results_by_team
+      description: >
+        Returns a list of game results for a single team including location and date information
+      parameters:
+        - name: category_id
+          in: path
+          required: true
+          description: category identifier
+          schema:
+            type: integer
+            format: int32
+        - name: gameset_id
+          in: path
+          required: true
+          description: gameset identifier
+          schema:
+            type: integer
+            format: int32
+        - name: team_id
+          in: path
+          required: true
+          description: team identifier, can be 0 to get game results for requested gameset
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+      responses:
+        '200':
+          description: Game results for the selected team found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameResult'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-Authorization
+
+  responses:
+    InvalidRequestError:
+      description: >
+        Invalid API Request, for more specific information see response.
+    UnauthorizedError:
+      description: >
+        Authentication Failed, API Key is missing or invalid. Please retrieve an API Key from your PowerUp Sports installation.
+    NoDataNotice:
+      description: >
+        No data was returned from your request. Displays on response code 204
+
+  schemas:
+    DefaultError:
+      type: object
+      required:
+        - code
+        - message
+        - url
+      properties:
+        code:
+          type: integer
+          format: int64
+        message:
+          type: string
+        url:
+          type: string
+          format: uri
+
+    SeasonItem:
+      type: object
+      required:
+        - season_id
+        - season_name
+      properties:
+        season_id:
+          type: integer
+          format: int64
+          example: 12345
+        season_name:
+          type: string
+          example: Fall Season 1999
+
+    CategoryItem:
+      type: object
+      required:
+        - category_id
+        - category_name
+      properties:
+        category_id:
+          type: integer
+          format: int64
+          example: 12345
+        category_name:
+          type: string
+          example: Fall Season 1999
+        category_age:
+          type: integer
+          format: int64
+          example: 21
+
+    GamesetItem:
+      type: object
+      required:
+        - gameset_id
+        - gameset_name
+      properties:
+        gameset_id:
+          type: integer
+          format: int64
+          example: 12345
+        gameset_name:
+          type: string
+          example: B16 Regular Season
+
+    DivisionItem:
+      type: object
+      required:
+        - division_id
+        - division_name
+      properties:
+        division_id:
+          type: integer
+          format: int64
+          example: 12345
+        division_name:
+          type: string
+          example: Recreational Division
+        season_id:
+          type: integer
+          format: int64
+          example: 3456
+        season_name:
+          type: string
+          example: 2022 Summer Outdoor
+        category_id:
+          type: integer
+          format: int64
+          example: 4567
+        category_name:
+          type: string
+          example: GU12
+
+    TeamItem:
+      type: object
+      required:
+        - team_id
+        - team_name
+      properties:
+        team_id:
+          type: integer
+          format: int64
+        team_name:
+          type: string
+          example: The Kickin' Ball Kickers
+        team_colour:
+          type: string
+          example: Blue/Yellow
+        team_code:
+          type: string
+          example: U4X-C-03
+
+    StandingsItem:
+      type: object
+      required:
+        - team_id
+        - team_name
+      properties:
+        division_id:
+          type: integer
+          format: int64
+        category_name:
+          type: string
+          example: GU10
+        division_name:
+          type: string
+          example: GU10 Regular Season
+        team_name:
+          type: string
+          example: McBlue's Team
+        team_colour:
+          type: string
+          example: Blue and white
+        G:
+          type: integer
+          format: int64
+          description: Games played
+        W:
+          type: integer
+          format: int64
+          description: Games won
+        T:
+          type: integer
+          format: int64
+          description: Games tied
+        L:
+          type: integer
+          format: int64
+          description: Games lost
+        F:
+          type: integer
+          format: int64
+          description: Goals for
+        A:
+          type: integer
+          format: int64
+          description: Goals against
+        GD:
+          type: integer
+          format: int64
+          description: Goal difference
+        SO:
+          type: integer
+          format: int64
+          description: Shutouts
+        PTS:
+          type: integer
+          format: int64
+          description: Points scored
+        team_id:
+          type: integer
+          format: int64
+        pool_name:
+          type: string
+          example: Pool A
+        publish_stats_publicly:
+          type: integer
+          format: int64
+          description: a flag representing whether player stats for this team can be accessed publicly
+        PCT:
+          type: integer
+          format: int64
+        team_logo:
+          type: string
+          example: pub/images/123456/teams/team-logo.png
+          description: local location of team logo if it has one
+        pool_id:
+          type: integer
+          format: int64
+
+    EventItem:
+      type: object
+      required:
+        - season_id
+        - event_id
+      properties:
+        season_id:
+          type: integer
+          format: int64
+        category_id:
+          type: integer
+          format: int64
+        category_name:
+          type: string
+          example: Fall Season 1999
+        event_id:
+          type: integer
+          format: int64
+        home_team_id:
+          type: integer
+          format: int64
+        home_team_name:
+          type: string
+          example: The Jumpin' Jumpers
+        home_team_colour:
+          type: string
+          example: Black and Yellow
+        game_home_team_score:
+          type: integer
+          format: int64
+        away_team_id:
+          type: integer
+          format: int64
+        away_team_name:
+          type: string
+          example: The Floppin' Floppers
+        away_team_colour:
+          type: string
+          example: Blue and Yellow
+        game_away_team_score:
+          type: integer
+          format: int64
+        event_date:
+          type: object
+          properties:
+            date:
+              type: string
+              format: date-time
+              example: '2022-02-15 20:30:15.000000'
+            timezone_type:
+              type: integer
+            timezone:
+              type: string
+              example: 'UTC'
+        time_start:
+          type: string
+          format: date-time
+          description: This is the time the event began
+          example: '01:00:30'
+        time_end:
+          type: string
+          format: date-time
+          description: This is the date the event ended
+          example: '21:00:30'
+        facility_name:
+          type: string
+          example: The PowerUp Centre
+        subfacility_designator:
+          type: string
+          example: North
+        event_type_code:
+          type: string
+          description: Code representation of event type
+        facility_latitude:
+          type: integer
+          format: int64
+          description: latitude for the location of this event
+        facility_longitude:
+          type: integer
+          format: int64
+          description: llongitude for the location of this event
+        event_description:
+          type: string
+          example: One off
+        date_created:
+          type: object
+          properties:
+            date:
+              type: string
+              format: date-time
+              example: '2022-02-25 20:30:15.000000'
+            timezone_type:
+              type: integer
+            timezone:
+              type: string
+              example: 'UTC'
+        event_type:
+          type: string
+          description: Text code representation of event type
+          example: 'REGULAR_GAME'
+        event_status:
+          type: string
+          description: Text code representation of event status
+          example: 'EVENT_STATUS_ACTIVE'
+
+    GameResult:
+      type: object
+      required:
+        - season_id
+        - event_id
+        - home_team_id
+        - home_team_name
+        - away_team_id
+        - away_team_name
+        - game_home_team_score
+        - game_away_team_score
+      properties:
+        season_id:
+          type: integer
+          format: int64
+        category_id:
+          type: integer
+          format: int64
+        category_name:
+          type: string
+          example: Fall Season 1999
+        division_id:
+          type: integer
+          format: int64
+        division_name:
+          type: string
+          example: Recreational
+        gameset_id:
+          type: integer
+          format: int64
+        gameset_name:
+          type: string
+          example: Playoffs
+        event_id:
+          type: integer
+          format: int64
+        home_team_id:
+          type: integer
+          format: int64
+        home_team_name:
+          type: string
+          example: The Jumpin' Jumpers
+        home_team_colour:
+          type: string
+          example: Black and Yellow
+        game_home_team_score:
+          type: integer
+          format: int64
+        away_team_id:
+          type: integer
+          format: int64
+        away_team_name:
+          type: string
+          example: The Floppin' Floppers
+        away_team_colour:
+          type: string
+          example: Blue and Yellow
+        game_away_team_score:
+          type: integer
+          format: int64
+        event_date:
+          type: object
+          properties:
+            date:
+              type: string
+              format: date-time
+              example: '2022-02-15 20:30:15.000000'
+            timezone_type:
+              type: integer
+            timezone:
+              type: string
+              example: 'UTC'
+        time_start:
+          type: string
+          format: date-time
+          description: This is the time the event began
+          example: '1:00:30'
+        time_end:
+          type: string
+          format: date-time
+          description: This is the date the event ended
+          example: '3:00:30'
+        facility_name:
+          type: string
+          example: The PowerUp Centre
+        subfacility_designator:
+          type: string
+          example: North
+        game_status:
+          type: integer
+          format: int64
+        event_type_code:
+          type: integer
+          format: int64
+        event_description:
+          type: string
+          example: First game of the semi-finals
+        location_latitude:
+          type: integer
+          format: int64
+          description: latitude for the location of this event
+        location_longitude:
+          type: integer
+          format: int64
+          description: llongitude for the location of this event
+        publish_stats_publicly:
+          type: integer
+          format: int64
+          minimum: 0
+          maximum: 1
