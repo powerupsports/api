@@ -6,7 +6,7 @@ security:
 info:
   description: >
     This API allows authenticated access to data for PowerUp Sports installations
-  version: "1.0.0"
+  version: "1.0.1"
   title: PowerUp Sports Public API
   contact:
     email: info@powerupsports.com
@@ -695,6 +695,242 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultError'
+  
+  /player-stats:
+    get:
+      summary: Get a list of statistics for players
+      operationId: player_stats_by_club
+      description: >
+        Returns a list of statistics used for ranking players for a club
+      responses:
+        '200':
+          description: Statistics found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Statistic'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  
+  /player-stats/stat/{playerstat_id}/:
+    get:
+      summary: Get a single player statistic
+      operationId: player_stats
+      description: >
+        Returns information about a requested player statistic
+      parameters:
+        - name: playerstat_id
+          in: path
+          required: true
+          description: player statistic identifier
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Player stats for the requested gameset found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Statistic'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  
+  /player-stats/stat/{playerstat_id}/gameset/{gameset_id}:
+    get:
+      summary: Get a list of players within a gameset for a requested statistic
+      operationId: player_stats_by_gameset
+      description: >
+        Returns a ranked list of players within a gameset for a requested statistic 
+      parameters:
+        - name: playerstat_id
+          in: path
+          required: true
+          description: player statistic identifier
+          schema:
+            type: integer
+            format: int32
+        - name: gameset_id
+          in: path
+          required: true
+          description: gameset identifier
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Player stats for the requested gameset found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerStat'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /player-stats/stat/{playerstat_id}/gameset/{gameset_id}/pool/{pool_id}:
+    get:
+      summary: Get a list of players within a pool for a requested statistic
+      operationId: player_stats_by_pool
+      description: >
+        Returns a ranked list of players within a pool for a requested statistic. Stats include the pool name
+      parameters:
+        - name: playerstat_id
+          in: path
+          required: true
+          description: player statistic identifier
+          schema:
+            type: integer
+            format: int32
+        - name: gameset_id
+          in: path
+          required: true
+          description: gameset identifier
+          schema:
+            type: integer
+            format: int32
+        - name: pool_id
+          in: path
+          required: true
+          description: pool identifier, can be 0 to get player stats for requested gameset
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+      responses:
+        '200':
+          description: Player stats for the requested pool found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerStat'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /pools/gameset/{gameset_id}:
+    get:
+      summary: Get a list of pools for a requested gameset
+      operationId: pools_by_gameset
+      description: >
+        Returns pools for a gameset
+      parameters:
+        - name: gameset_id
+          in: path
+          required: true
+          description: gameset identifier
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Pools for the requested gameset found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pool'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+
+  /pools/{id}:
+    get:
+      summary: Get the name of a pool
+      operationId: pool_by_id
+      description: >
+        Returns a single requested pool name
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: pool identifier
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Requested pool found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pool'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+
+
+
 
 components:
   securitySchemes:
@@ -1117,3 +1353,74 @@ components:
           format: int64
           minimum: 0
           maximum: 1
+
+    PlayerStat:
+      type: object
+      required:
+        - member_first_name
+        - member_last_name
+        - team
+        - playerstatistic_id
+        - player_statistic_name
+        - total
+        - gameset_id
+      properties:
+        member_first_name:
+          type: string
+          example: John
+        member_last_name:
+          type: string
+          example: Doe
+        team:
+          type: string
+          example: Toronto FC
+        playerstatistic_id:
+          type: integer
+          format: int64
+        player_statistic_name:
+          type: string
+          example: Goals
+        total:
+          type: integer
+          format: int64
+        gameset_id:
+          type: integer
+          format: int64
+        pool_id:
+          type: integer
+          format: int64
+        pool_name:
+          type: string
+          example: Pool A
+
+    Statistic:
+      type: object
+      required:
+        - playerstatistic_id
+        - player_statistic_name
+      properties:
+        playerstatistic_id:
+          type: integer
+          format: int64
+        player_statistic_name:
+          type: string
+          example: Goal
+        player_statistic_description:
+          type: string
+          example: Player scored a goal
+        status_id:
+          type: integer
+          format: int64
+
+    Pool:
+      type: object
+      required:
+        - pool_id
+        - pool_name
+      properties:
+        pool_id:
+          type: integer
+          format: int64
+        pool_name:
+          type: string
+          example: Pool A
