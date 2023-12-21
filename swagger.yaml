@@ -6,11 +6,77 @@ security:
 info:
   description: >
     This API allows authenticated access to data for PowerUp Sports installations
-  version: "1.0.1"
+  version: "1.0.2"
   title: PowerUp Sports Public API
   contact:
     email: info@powerupsports.com
 paths:
+  /club_info:
+    get:
+      summary: Get info for a club
+      description: >
+        Returns information for a club.
+      operationId: club_info
+      responses:
+        '200':
+          description: Requested club info found
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /todays_events:
+    get:
+      summary: Get today's events for a club
+      description: >
+        Returns a set of todays' events for a club.
+      operationId: todays_events
+      responses:
+        '200':
+          description: Requested event(s) found
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /facility_status:
+    get:
+      summary: Get facility status for a club
+      description: >
+        Returns a set of facility status for a club.
+      operationId: facility_status
+      responses:
+        '200':
+          description: Requested facility status found
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
   /seasons:
     get:
       summary: Get seasons for a club
@@ -695,7 +761,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultError'
-  
+
   /player-stats:
     get:
       summary: Get a list of statistics for players
@@ -723,7 +789,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultError'
-  
+
   /player-stats/stat/{playerstat_id}/:
     get:
       summary: Get a single player statistic
@@ -760,13 +826,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultError'
 
-  
+
   /player-stats/stat/{playerstat_id}/gameset/{gameset_id}:
     get:
       summary: Get a list of players within a gameset for a requested statistic
       operationId: player_stats_by_gameset
       description: >
-        Returns a ranked list of players within a gameset for a requested statistic 
+        Returns a ranked list of players within a gameset for a requested statistic
       parameters:
         - name: playerstat_id
           in: path
