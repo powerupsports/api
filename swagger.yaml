@@ -6,7 +6,7 @@ security:
 info:
   description: >
     This API allows authenticated access to data for PowerUp Sports installations
-  version: "1.0.2"
+  version: "1.0.3"
   title: PowerUp Sports Public API
   contact:
     email: info@powerupsports.com
@@ -91,7 +91,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SeasonItem'
+                  $ref: '#/components/schemas/Season'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -128,7 +128,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SeasonItem'
+                  $ref: '#/components/schemas/Season'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -165,7 +165,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CategoryItem'
+                  $ref: '#/components/schemas/Category'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -202,7 +202,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CategoryItem'
+                  $ref: '#/components/schemas/Category'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -239,7 +239,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/DivisionItem'
+                  $ref: '#/components/schemas/Division'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -276,7 +276,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/DivisionItem'
+                  $ref: '#/components/schemas/Division'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -313,7 +313,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/DivisionItem'
+                  $ref: '#/components/schemas/Division'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -350,7 +350,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GamesetItem'
+                  $ref: '#/components/schemas/Gameset'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -387,7 +387,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GamesetItem'
+                  $ref: '#/components/schemas/Gameset'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -424,7 +424,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TeamItem'
+                  $ref: '#/components/schemas/Team'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -461,7 +461,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TeamItem'
+                  $ref: '#/components/schemas/Team'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -498,7 +498,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TeamItem'
+                  $ref: '#/components/schemas/Team'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -550,7 +550,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/EventItem'
+                  $ref: '#/components/schemas/Event'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -610,7 +610,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/EventItem'
+                  $ref: '#/components/schemas/Event'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -654,7 +654,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/StandingsItem'
+                  $ref: '#/components/schemas/Standings'
         '204':
           $ref: '#/components/responses/NoDataNotice'
         '400':
@@ -995,6 +995,78 @@ paths:
                 $ref: '#/components/schemas/DefaultError'
 
 
+  /skus/product/{product_id}:
+    get:
+      summary: Get a list of skus for a requested product
+      operationId: skus_by_product
+      description: >
+        Returns skus for a product
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          description: product identifier
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Skus for the requested product found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sku'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+
+  /registrations/sku/{sku_id}:
+    get:
+      summary: Get a list of registrations for a requested sku
+      operationId: registrations_by_sku
+      description: >
+        Returns registrations for a sku
+      parameters:
+        - name: sku_id
+          in: path
+          required: true
+          description: sku identifier
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Registrations for the requested sku found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Registration'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
 
 
 
@@ -1033,7 +1105,7 @@ components:
           type: string
           format: uri
 
-    SeasonItem:
+    Season:
       type: object
       required:
         - season_id
@@ -1047,7 +1119,7 @@ components:
           type: string
           example: Fall Season 1999
 
-    CategoryItem:
+    Category:
       type: object
       required:
         - category_id
@@ -1065,7 +1137,7 @@ components:
           format: int64
           example: 21
 
-    GamesetItem:
+    Gameset:
       type: object
       required:
         - gameset_id
@@ -1079,7 +1151,7 @@ components:
           type: string
           example: B16 Regular Season
 
-    DivisionItem:
+    Division:
       type: object
       required:
         - division_id
@@ -1107,7 +1179,7 @@ components:
           type: string
           example: GU12
 
-    TeamItem:
+    Team:
       type: object
       required:
         - team_id
@@ -1126,7 +1198,7 @@ components:
           type: string
           example: U4X-C-03
 
-    StandingsItem:
+    Standings:
       type: object
       required:
         - team_id
@@ -1204,7 +1276,7 @@ components:
           type: integer
           format: int64
 
-    EventItem:
+    Event:
       type: object
       required:
         - season_id
@@ -1490,3 +1562,89 @@ components:
         pool_name:
           type: string
           example: Pool A
+
+    Sku:
+      type: object
+      required:
+        - sku_id
+      properties:
+        sku_id:
+          type: integer
+          format: int64
+        sku_code:
+          type: string
+        sku_name:
+          type: string
+        sku_description:
+          type: string
+        sku_price:
+          type: number
+          format: float
+        sku_quantity:
+          type: integer
+        payment_plan:
+          type: string
+        roster_direct_to:
+          type: string
+        sku_status:
+          type: string
+
+    Registration:
+      type: object
+      required:
+        - orderitem_id
+      properties:
+        orderitem_id:
+          type: integer
+          format: int64
+        product_code:
+          type: string
+        sku_code:
+          type: string
+        user_id:
+          type: integer
+          format: int64
+        first_name:
+          type: string
+        last_name:
+          type: string
+        gender:
+          type: string
+        birthdate:
+          type: string
+        poa_last_id_chk:
+          type: string
+        affiliation:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        postal:
+          type: string
+        home_phone:
+          type: string
+        customer_first_name:
+          type: string
+        customer_last_name:
+          type: string
+        customer_email:
+          type: string
+        customer_home_phone:
+          type: string
+        supplementary_guardian:
+          type: string
+        supplementary_guardian_email:
+          type: string
+        orderitem_status:
+          type: string
+        team_name:
+          type: string
+        user_note:
+          type: string
+        roster_note:
+          type: string
+        questionnaire_data:
+          type: object
