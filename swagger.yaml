@@ -512,6 +512,43 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultError'
 
+  /teams/players/{team_id}:
+    get:
+      summary: Get players for a specific team
+      description: >
+        Returns a list of players (including coaches) for a specific team
+      operationId: players_by_team
+      parameters:
+        - name: team_id
+          in: path
+          description: Team identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Players for the requested team found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+        '204':
+          $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
   /schedules/season/{season_id}/category/{category_id}/division/{division_id}:
     get:
       summary: Get a schedule of events for a division
@@ -751,6 +788,53 @@ paths:
                   $ref: '#/components/schemas/GameResult'
         '204':
           $ref: '#/components/responses/NoDataNotice'
+        '400':
+          $ref: '#/components/responses/InvalidRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+
+  /game-results/season/{season_id}/update/{game_id}:
+    post:
+      summary: Save game data including scores and cards
+      operationId: save_game
+      description: >
+        Saves game data including team scores and penalty cards for a specific game
+      parameters:
+        - name: season_id
+          in: path
+          required: true
+          description: Season identifier
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: game_id
+          in: path
+          required: true
+          description: Game/Event identifier
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameSaveRequest'
+      responses:
+        '200':
+          description: Game data saved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSaveResponse'
         '400':
           $ref: '#/components/responses/InvalidRequestError'
         '401':
@@ -1067,8 +1151,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultError'
-
-
 
 components:
   securitySchemes:
@@ -1648,3 +1730,94 @@ components:
           type: string
         questionnaire_data:
           type: object
+
+    GameSaveRequest:
+      type: object
+      required:
+        - home_team_score
+        - away_team_score
+      properties:
+        home_team_score:
+          type: string
+          example: "1"
+        away_team_score:
+          type: string
+          example: "2"
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+
+    GameSaveResponse:
+      type: object
+      required:
+        - season_id
+        - home_team_score
+        - away_team_score
+      properties:
+        season_id:
+          type: integer
+          format: int64
+          example: 5545
+        home_team_score:
+          type: string
+          example: "1"
+        away_team_score:
+          type: string
+          example: "2"
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+
+    Card:
+      type: object
+      required:
+        - member_id
+        - penalty_id
+        - offence_id
+        - minute
+      properties:
+        member_id:
+          type: integer
+          format: int64
+          example: 2765520
+        penalty_id:
+          type: integer
+          format: int64
+          example: 1
+        offence_id:
+          type: integer
+          format: int64
+          example: 2681
+        minute:
+          type: integer
+          format: int64
+          example: 60
+        reason:
+          type: string
+          example: ""
+    Player:
+      type: object
+      required:
+        - id
+        - first_name
+        - last_name
+        - role
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2765516
+        first_name:
+          type: string
+          example: Maya
+        last_name:
+          type: string
+          example: Chavez
+        member_number:
+          type: string
+          example: "2"
+        role:
+          type: string
+          example: Player
