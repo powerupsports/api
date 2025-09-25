@@ -1,6 +1,6 @@
 openapi: 3.0.0
 servers:
-  - url: https://api.powerupsports.com/v1/
+  - url: http://localhost:8080/v1/
 security:
   - apiKey: []
 info:
@@ -81,8 +81,17 @@ paths:
     get:
       summary: Get seasons for a club
       description: >
-        Returns a set of seasons for a club. Seasons that are currently active or have ended in the last month will be returned
+        Returns a set of seasons for a club. Seasons that are currently active or have ended in the last month will be returned. Use the include_unpublished parameter to also retrieve seasons that have not yet been published.
       operationId: seasons_by_club
+      parameters:
+        - name: include_unpublished
+          in: query
+          description: Include seasons that have not yet been published (publish date is in the future)
+          required: false
+          schema:
+            type: string
+            enum: ["1"]
+            example: "1"
       responses:
         '200':
           description: Requested season(s) found
@@ -183,7 +192,7 @@ paths:
     get:
       summary: Get categories for a season
       description: >
-        Returns categories for a requested season
+        Returns categories for a requested season. Use the include_unpublished parameter to retrieve categories from seasons that have not yet been published.
       operationId: categories_by_season
       parameters:
         - name: season_id
@@ -194,6 +203,14 @@ paths:
             type: integer
             format: int64
             minimum: 0
+        - name: include_unpublished
+          in: query
+          description: Include categories from seasons that have not yet been published
+          required: false
+          schema:
+            type: string
+            enum: ["1"]
+            example: "1"
       responses:
         '200':
           description: Requested categories found
@@ -294,7 +311,7 @@ paths:
     get:
       summary: Get division and supplementary information for a category
       description: >
-        Returns divisions linked to a category including season and category information
+        Returns divisions linked to a category including season and category information. Use the include_unpublished parameter to retrieve divisions from seasons that have not yet been published.
       operationId: divisions_by_category
       parameters:
         - name: category_id
@@ -305,6 +322,14 @@ paths:
             type: integer
             format: int64
             minimum: 0
+        - name: include_unpublished
+          in: query
+          description: Include divisions from seasons that have not yet been published
+          required: false
+          schema:
+            type: string
+            enum: ["1"]
+            example: "1"
       responses:
         '200':
           description: Divisions within requested category found
