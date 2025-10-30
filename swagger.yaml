@@ -552,6 +552,14 @@ paths:
             type: integer
             format: int64
             minimum: 0
+        - name: include_hidden
+          in: query
+          description: Include players from teams where roster visibility is disabled (show_roster_to_team = 0)
+          required: false
+          schema:
+            type: string
+            enum: ["1"]
+            example: "1"
       responses:
         '200':
           description: Players for the requested team found
@@ -579,7 +587,7 @@ paths:
       summary: Get a schedule of events for a division
       operationId: schedule_by_division
       description: >
-        Returns a schedule of events for all teams within a division ordered by date
+        Returns a schedule of events for all teams within a division ordered by date. Use the include_unpublished parameter to retrieve schedules from seasons that have not yet been published.
       parameters:
         - name: season_id
           in: path
@@ -604,6 +612,14 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: include_unpublished
+          in: query
+          description: Include schedules from seasons that have not yet been published
+          required: false
+          schema:
+            type: string
+            enum: ["1"]
+            example: "1"
       responses:
         '200':
           description: Schedule of events for a requested division found
